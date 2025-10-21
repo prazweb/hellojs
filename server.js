@@ -1,18 +1,25 @@
+require('dotenv').config();
 const express = require('express'); 
 const app = express(); 
 app.use(express.json());
+const port = process.env.PORT;
 
-app.get('/', (req, res) => res.send('Welcome to User API!'));
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url} - ${new Date()}`);
+    next();
+});
 
-app.post('/register', (req, res) => {
+app.get('/', (req, res) => res.send('My Week 2 API'));
+
+app.post('/user', (req, res) => {
     const { name, email } = req.body;
     if (!name || !email) return res.status (400).json({ error: 'Missing fields' }); 
     // Simulate DB save
-    res.status(201).json({ message: `Registered: ${name} (${email})` });
+    res.status(201).json({ message: `Hello, ${name}!` });
 });
 
 app.get('/user/:id', (req, res) => {
     res.json({ id: req.params.id, name: 'Sample User' });
 });
 
-app.listen(3000, () => console.log('API live on port 3000'));
+app.listen(port, () => console.log(`API live on port ${port}`));
